@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="org.honeyrock.mapper.BoardMapper">
+  
+  <select id="getListAll" resultType="org.honeyrock.domain.BoardVO">
+  	select * from tbl_boards
+  	where 1=1
+  	<include refid = "searchSQL"></include>
+  	and bno>(select max(bno) - 10000 from tbl_boards)
+  	 and del = 'N' order by bno desc limit #{skip} , 10
+  </select>
+  
+  <insert id="register" parameterType="org.honeyrock.domain.BoardVO">
+  	insert into tbl_boards (title, writer, content) values(#{title}, #{writer}, #{content})
+  </insert>
+  
+  <select id="read" resultType="org.honeyrock.domain.BoardVO">
+  	select * from tbl_boards where bno = #{bno}
+  </select>
+  
+  <update id="modify" parameterType="org.honeyrock.domain.BoardVO">
+  	update tbl_boards set title= #{title}, writer= #{writer}, content= #{content}, updatedate = now() where bno = #{bno}
+  </update>
+  
+  <update id="delete" parameterType="org.honeyrock.domain.BoardVO">
+  	update tbl_boards set del='Y' where bno=#{bno}
+  </update>
+  
+  <select id="count" resultType="int" >
+  	select count(*) from tbl_boards
+  	where 1=1
+  	<include refid = "searchSQL"></include>
+  	and bno>(select max(bno) - 10000 from tbl_boards)
+  </select>
+  
+  <sql id="searchSQL">
+  	<if test="types != null">
+  		<foreach item="item" collection="types" open="AND (" close=")" separator="OR">
+  			<if test="item == 't'.toString()">
+  				title like concat('%',#{keyword},'%')
+  			</if>
+  			<if test="item == 'w'.toString()">
+  				writer like concat('%',#{keyword},'%')
+  			</if>
+  			<if test="item == 'c'.toString()">
+  				content like concat('%',#{keyword},'%')
+  			</if>
+  		</foreach>
+  	</if>
+  </sql>
+  
+  </mapper>
