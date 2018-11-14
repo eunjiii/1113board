@@ -66,7 +66,7 @@ public class BoardTests {
 	}
 	
 	@Test
-	public void Tests() {
+	public void findTests() {
 		PageParam pageParam = new PageParam();
 		pageParam.setType("w");
 		pageParam.setKeyword("ÀÛ¼ºÀÚ");
@@ -74,20 +74,4 @@ public class BoardTests {
 		log.info(mapper.count());
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
