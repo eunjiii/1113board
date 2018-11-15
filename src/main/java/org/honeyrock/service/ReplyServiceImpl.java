@@ -48,4 +48,10 @@ public class ReplyServiceImpl implements ReplyService {
 		
 		return mapper.getListWithPaging(page, bno);
 	}
+
+	@Override
+	public ReplyPageDTO getListPage(PageParam page, int bno) {
+		
+		return new ReplyPageDTO(mapper.getCountByBno(bno), mapper.getListWithPaging(page, bno));
+	}
 }

@@ -46,18 +46,18 @@ public class ReplyController {
 		
 	}
 	
-	@GetMapping(value = "/pages/{bno}/{page}",
-			produces = {
-					MediaType.APPLICATION_XML_VALUE,
-					MediaType.APPLICATION_JSON_UTF8_VALUE})
-	public ResponseEntity<List<ReplyVO>> getList(@PathVariable("page") int page, @PathVariable("bno") int bno){
-		
-		log.info("getList....................");
-		PageParam param = new PageParam();
-		log.info(param);
-
-		return new ResponseEntity<>(service.getList(param, bno), HttpStatus.OK);
-	}
+//	@GetMapping(value = "/pages/{bno}/{page}",
+//			produces = {
+//					MediaType.APPLICATION_XML_VALUE,
+//					MediaType.APPLICATION_JSON_UTF8_VALUE})
+//	public ResponseEntity<List<ReplyVO>> getList(@PathVariable("page") int page, @PathVariable("bno") int bno){
+//		
+//		log.info("getList....................");
+//		PageParam param = new PageParam();
+//		log.info(param);
+//
+//		return new ResponseEntity<>(service.getList(param, bno), HttpStatus.OK);
+//	}
 	
 	@GetMapping(value="/{rno}",
 			produces = {
@@ -92,5 +92,22 @@ public class ReplyController {
 			new ResponseEntity<>("success", HttpStatus.OK)
 			: new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
+	
+	@GetMapping(value="/pages/{bno}/{page}",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_UTF8_VALUE})
+	public ResponseEntity<ReplyPageDTO> getList(@PathVariable("page") int page, @PathVariable("bno") int bno){
+		
+		PageParam param = new PageParam();
+		
+		log.info("get Reply List bno: " + bno);
+		
+		log.info("param: "+param);
+		
+		return new ResponseEntity<>(service.getListPage(param, bno), HttpStatus.OK);
+		
+	}
+	
 	
 }

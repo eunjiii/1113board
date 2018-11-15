@@ -73,6 +73,30 @@
 			</ul>
 			</div>
 			<!-- /.panel-body -->
+			<div class="panel=footer">
+				
+				<div class="dataTables_paginate paging_simple_numbers"
+									id="dataTables-example_paginate">
+									<ul class="pagination">
+										<c:if test="${pageObj.prev}">
+											<li class="paginate_button previous"
+												aria-controls="dataTables-example" tabindex="0"
+												id="dataTables-example_previous"><a href="${pageObj.start-1}">Previous</a></li>
+										</c:if>
+										<c:forEach begin="${pageObj.start}" end="${pageObj.end}"
+											var="num">
+											<li class="paginate_button " data-page="${num}"
+												aria-controls="dataTables-example" tabindex="0"><a href="${num}"><c:out value="${num}" /></a></li>
+										</c:forEach>
+										<c:if test="${pageObj.next}">
+											<li class="paginate_button next"
+												aria-controls="dataTables-example" tabindex="0"
+												id="dataTables-example_next"><a href="${pageObj.end+1}">Next</a></li>
+										</c:if>
+									</ul>
+								</div>
+			
+			</div>
 		</div>
 		<!-- /.panel -->
 	</div>
@@ -136,11 +160,59 @@ $(document).ready(function() {
 		
 		showList(1);
 		
+		var pageNum = 1;
+		var replyPageFooter = $(".panel-footer");
+		
+		function showReplyPage(replyCnt){
+			
+			var endNum = Math.ceil(pageNum / 10.0)*10;
+			var startNum = endNum - 9;
+			
+			var prev = startNum != 1;
+			var next = false;
+			
+			if(endNum * 10 >= replyCnt){
+				endNum = Math.ceil(replyCnt/10.0);
+			}
+			if(endNum * 10 < replyCnt){
+				next = true;
+			}
+			var str = "<ul class='pagination pull-right'>";
+			
+			if(prev){
+				str+="<li class='page-item'><a class='page-link' href='"+(startNum-1)+"'>Previous</a></li>";
+			}
+			for(var i = startNum ; i<=endNum;i++){
+				var active = pageNum == i?"active":"";
+				
+				str += "<li class='page-item "+active+" '><a class='page-link' href='"+i+"'>"+i+"</a></li>";
+			}
+			if(next){
+				str+= "<li class='page-item'><a class='page-link' href='"+(endNum+1)+"'>Next</a></li>"; 
+			}
+			str += "</ul></div>";
+			
+			console.log(str);
+			
+			replyPageFooter.html(str);
+		}
+		
 		function showList(page){
-			replyService.getList({bno:bnoValue, page:page||1}, function(list){
+			
+			console.log("show list"+page);
+			replyService.getList({bno:bnoValue, page:page||1}, function(replyCnt, list){
+				
+				console.log("replyCnt: "+replyCnt);
+				console.log("list: "+ list);
+				
+				if(page == -1){
+					pageNum = Math.ceil(replyCnt/10.0);
+					showList(pageNum);
+					return;
+				}
+				
 				var str = "";
 				if(list == null||list.length==0){
-					replyUL.html("");
 					return;
 				}
 				for(var i=0,len=list.length||0;i<len;i++){
@@ -150,6 +222,8 @@ $(document).ready(function() {
 					str += "	<p>"+list[i].reply+"</p><div></li>";
 				}
 				replyUL.html(str);
+				
+				showReplyPage(replyCnt);
 			});
 		}
 		

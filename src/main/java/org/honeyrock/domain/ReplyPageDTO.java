@@ -15,4 +15,3 @@ public class ReplyPageDTO {
 	private List<ReplyVO> list;
 	
 }
-

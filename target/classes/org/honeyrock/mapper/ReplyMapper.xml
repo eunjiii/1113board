@@ -24,19 +24,11 @@
   <select id="getListWithPaging" resultType="org.honeyrock.domain.ReplyVO">
   	select rno, bno, reply, replyer, replydate, updatedate
   	from tbl_reply
-  	where bno = #{bno} order by rno asc
+  	where bno = #{bno} order by rno asc limit #{page.skip} , 10
   </select>
-  
-   <!-- <select id="getListWithPaging" resultType="org.zerock.domain.ReplyVO">
-    select /*+INDEX(tbl_reply idx_reply)*/
-   bno,rno, reply, replyer, replyDate, updateDate
-   from tbl_reply
-   where bno = #{bno}
-   limit #{PageParam.skip}, #{PageParam.display}
-    </select>
     
-    <select id="getCountBno" resultType="int">
+    <select id="getCountByBno" resultType="int">
     	select count(rno) from tbl_reply where bno = #{bno}
-    </select> -->
+    </select>
   
   </mapper>

@@ -17,4 +17,6 @@ public interface ReplyService {
 	public int remove(int rno);
 	
 	public List<ReplyVO> getList(PageParam page, int bno);
+	
+	public ReplyPageDTO getListPage(PageParam page, int bno);
 }
